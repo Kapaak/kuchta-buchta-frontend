@@ -62,7 +62,7 @@ const StyledDescriptionWrapper = styled.div`
     text-decoration-color: lightgrey;
 }
 	} */
-	h3 {
+	h4 {
 		margin: 1rem 0;
 	}
 
@@ -74,7 +74,7 @@ const StyledDescriptionWrapper = styled.div`
 		flex-direction: row;
 		margin-top: 6rem;
 
-		h3 {
+		h4 {
 			margin: 1.5rem 0;
 		}
 	}

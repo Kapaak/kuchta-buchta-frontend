@@ -10,7 +10,7 @@ import { FilterContext } from "@/components/utils";
 
 interface Props {
 	recipes: Array<object>;
-	categories: Array<string>;
+	category: Array<string>;
 }
 
 const Container = styled.div`
@@ -64,7 +64,7 @@ const Recipe = styled.div`
 	}
 `;
 
-export default function Home({ recipes, categories }: Props) {
+export default function Home({ recipes, category }: Props) {
 	const [mappedRecipes, setMappedRecipes] = useState<Array<object>>([]);
 	const [activeFilters, setActiveFilters] = useState<Array<string>>([]);
 	const { PROJECT_ID } = process.env;
@@ -109,7 +109,7 @@ export default function Home({ recipes, categories }: Props) {
 	const filteredData = (p: any, index: number) => {
 		if (activeFilters.length === 0) return renderComponent(p, index);
 
-		const targetRecipes = p.categories.map((el: any) => el.title);
+		const targetRecipes = p.category.map((el: any) => el.title);
 		targetRecipes.sort();
 		const sortedActiveFilters = [...activeFilters].sort();
 
@@ -144,7 +144,7 @@ export default function Home({ recipes, categories }: Props) {
 			<Container>
 				<h1>Seznam receptů</h1>
 				<FilterContext.Provider value={[optionsHandler]}>
-					<Filter options={categories} activeFilters={activeFilters} />
+					<Filter options={category} />
 				</FilterContext.Provider>
 				<RecipeList>
 					{mappedRecipes.length ? (
@@ -162,14 +162,14 @@ export default function Home({ recipes, categories }: Props) {
 
 export const getServerSideProps = async (pageContext: any) => {
 	const query = encodeURIComponent(
-		`*[ _type == "post" ]{categories[]->{title},body,slug,mainImage,title}`
+		`*[ _type == "post" ]{category[]->{title},body,slug,mainImage,title}`
 	);
 	const url = `https://${process.env.PROJECT_ID}.api.sanity.io/v1/data/query/production?query=${query}`;
 	const result = await fetch(url).then(res => res.json());
 
 	//creating array for categories used in each element
 	const categories = result.result.map((category: any) =>
-		category.categories.map((el: any) => el.title)
+		category.category.map((el: any) => el.title)
 	);
 
 	//turning multiple arrays into 1 + removing duplicates
@@ -187,7 +187,7 @@ export const getServerSideProps = async (pageContext: any) => {
 		return {
 			props: {
 				recipes: result.result,
-				categories: flattenCategories,
+				category: flattenCategories,
 			},
 		};
 	}

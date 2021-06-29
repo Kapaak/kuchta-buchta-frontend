@@ -50,14 +50,45 @@ const StyledCategory = styled.div`
 
 const StyledText = styled(TextContent)``;
 
+const StyledDescriptionWrapper = styled.div`
+	display: flex;
+	flex-direction: column;
+	margin-top: 2rem;
+
+	/* p,li{
+		text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 1rem;
+    text-decoration-color: lightgrey;
+}
+	} */
+	h3 {
+		margin: 1rem 0;
+	}
+
+	div {
+		flex: 1;
+	}
+
+	@media ${breakpoints.desktop} {
+		flex-direction: row;
+		margin-top: 6rem;
+
+		h3 {
+			margin: 1.5rem 0;
+		}
+	}
+`;
+
 interface Props {
 	body: Array<object>;
 	title: String;
 	image: object;
 	categories: Array<object>;
+	ingredience: Array<object>;
 }
 
-const Post = ({ body, title, image, categories }: Props) => {
+const Post = ({ body, title, image, categories, ingredience }: Props) => {
 	return (
 		<StyledText>
 			<h1>{title}</h1>
@@ -72,15 +103,25 @@ const Post = ({ body, title, image, categories }: Props) => {
 				</StyledCategories>
 			</StyledHeader>
 
-			<BlockContent
-				blocks={body}
-				serializers={{
-					//@ts-ignore
-					list: (props: any) => {
-						return <ul>{props.children}</ul>;
-					},
-				}}
-			/>
+			<StyledDescriptionWrapper>
+				<div>
+					<h2>Co budeme potřebovat</h2>
+					<BlockContent blocks={ingredience} />
+				</div>
+
+				<div>
+					<h2>Jak postupovat</h2>
+					<BlockContent
+						blocks={body}
+						serializers={{
+							//@ts-ignore
+							list: (props: any) => {
+								return <ul>{props.children}</ul>;
+							},
+						}}
+					/>
+				</div>
+			</StyledDescriptionWrapper>
 		</StyledText>
 	);
 };
@@ -92,7 +133,7 @@ export const getServerSideProps = async (pageContext: any) => {
 
 	if (!pageSlug) return { notFound: true };
 
-	const query = `*[ _type == "post" && slug.current == $pageSlug ][0]{body,title,mainImage,categories[]->{title},author->{_id,name}}`;
+	const query = `*[ _type == "post" && slug.current == $pageSlug ][0]{body,title,mainImage,category[]->{title},ingredience,author->{_id,name}}`;
 
 	const recipe = await client.fetch(query, { pageSlug });
 
@@ -103,8 +144,9 @@ export const getServerSideProps = async (pageContext: any) => {
 				body: recipe.body,
 				title: recipe.title,
 				image: recipe.mainImage,
-				categories: recipe.categories,
+				categories: recipe.category,
 				author: recipe.author,
+				ingredience: recipe.ingredience,
 			},
 		};
 };

@@ -144,7 +144,6 @@ export default function Home({ recipes, category }: Props) {
 		if (compareArr(sortedActiveFilters, targetRecipes))
 			return renderComponent(p, index);
 	};
-	//ss
 
 	return (
 		<Container>

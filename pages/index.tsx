@@ -7,6 +7,7 @@ import imageUrlBuilder from "@sanity/image-url";
 import Filter from "@/components/filter";
 //context
 import { FilterContext } from "@/components/utils";
+import breakpoints from "@/styles/breakpoints";
 
 interface Props {
 	recipes: Array<object>;
@@ -17,6 +18,7 @@ const Container = styled.div`
 	margin: auto;
 	padding: 2rem;
 	max-width: var(--max-width);
+	min-height: 100vh;
 `;
 
 const RecipeList = styled.div`
@@ -32,7 +34,7 @@ const Recipe = styled.div`
 	width: 100%;
 	min-height: 28rem;
 	min-width: 25rem;
-	flex: 0 0 22%;
+	flex: 1 0 22%;
 	overflow: hidden;
 
 	a {
@@ -61,6 +63,10 @@ const Recipe = styled.div`
 			transform: scale(1.1);
 			transition: all 0.3s ease;
 		}
+	}
+
+	@media ${breakpoints.tablet} {
+		flex: 0 0 22%;
 	}
 `;
 
@@ -140,23 +146,21 @@ export default function Home({ recipes, category }: Props) {
 	};
 
 	return (
-		<>
-			<Container>
-				<h1>Seznam receptů</h1>
-				<FilterContext.Provider value={[optionsHandler]}>
-					<Filter options={category} />
-				</FilterContext.Provider>
-				<RecipeList>
-					{mappedRecipes.length ? (
-						mappedRecipes.map((p: any, index: number) => {
-							return filteredData(p, index);
-						})
-					) : (
-						<>No recipes </>
-					)}
-				</RecipeList>
-			</Container>
-		</>
+		<Container>
+			<h1>Seznam receptů</h1>
+			<FilterContext.Provider value={[optionsHandler]}>
+				<Filter options={category} />
+			</FilterContext.Provider>
+			<RecipeList>
+				{mappedRecipes.length ? (
+					mappedRecipes.map((p: any, index: number) => {
+						return filteredData(p, index);
+					})
+				) : (
+					<>No recipes </>
+				)}
+			</RecipeList>
+		</Container>
 	);
 }
 

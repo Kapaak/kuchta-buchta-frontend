@@ -1,6 +1,7 @@
 //components
-import Nav from "@/components/Nav";
 import Head from "@/components/Head";
+import Nav from "@/components/Nav";
+import Footer from "@/components/Footer";
 //styles
 import GlobalStyles from "@/styles/GlobalStyles";
 //types
@@ -13,6 +14,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 			<Nav />
 			<GlobalStyles />
 			<Component {...pageProps} />
+			<Footer />
 		</>
 	);
 }

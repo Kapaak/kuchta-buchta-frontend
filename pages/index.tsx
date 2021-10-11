@@ -172,9 +172,15 @@ export const getServerSideProps = async (pageContext: any) => {
 	const result = await fetch(url).then(res => res.json());
 
 	//creating array for categories used in each element
-	const categories = result.result.map((category: any) =>
-		category.category.map((el: any) => el.title)
-	);
+	const categories = result.result.map((category: any) => {
+		return category.title;
+		// category.category.map((el: any) => el.title);
+	});
+	// const categories = result.result.map((category: any) =>
+	// 	category.category.map((el: any) => el.title)
+	// );
+
+	console.log(categories, "categ");
 
 	//turning multiple arrays into 1 + removing duplicates
 	//@ts-ignore
